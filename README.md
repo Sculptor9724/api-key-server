@@ -33,7 +33,6 @@ the development file watcher. Set `PORT` to change the port.
 | --- | --- | --- |
 | `GEMINI_API_KEY` | Gemini endpoints | Google Gemini API key |
 | `GITHUB_API_KEY` | GitHub repository input | GitHub token used to read repository contents |
-| `GITHUB_API_KEY_BENNA` | Optional | Secondary GitHub token used as a fallback |
 | `SUPABASE_URL` | Authenticated routes and account deletion | Supabase project URL |
 | `SUPABASE_PUBLISHABLE_KEY` | Authenticated routes and account deletion | Supabase publishable key used to validate access tokens |
 | `SUPABASE_SECRET_KEY` | Account deletion | Backend-only Supabase secret key; never expose it to clients |
