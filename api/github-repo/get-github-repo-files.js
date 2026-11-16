@@ -3,37 +3,13 @@ const createTryFetchTreeByRef = require("./utils/tryFetchTreeByRef");
 // Simple in-memory cache for repository files
 const repoFilesCache = {}; // { [repoUrl]: { files, expiresAt } }
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
-let useBennaGithubApiKey = false;
-
-function getNextGithubApiKey() {
-  const primaryKey = process.env.GITHUB_API_KEY;
-  const bennaKey = process.env.GITHUB_API_KEY_BENNA;
-
-  if (!primaryKey) {
-    return bennaKey;
-  }
-
-  if (!bennaKey) {
-    return primaryKey;
-  }
-
-  if (useBennaGithubApiKey) {
-    useBennaGithubApiKey = false;
-    
-    return bennaKey;
-  }
-
-  useBennaGithubApiKey = true;
-  
-  return primaryKey;
-}
 
 async function getRepoFiles(
   repoUrl,
   maxFiles = 10,
   basePath = "app/src/main/java/com/example",
 ) {
-  const githubApiKey = getNextGithubApiKey();
+  const githubApiKey = process.env.GITHUB_API_KEY;
 
   // Check cache first
   const cached = repoFilesCache[repoUrl];
@@ -275,10 +251,5 @@ async function getRepoFiles(
   console.log(`Repository files cached for: ${repoUrl}`);
   return result;
 }
-
-getRepoFiles.__resetGithubApiKeyRotation =
-  function resetGithubApiKeyRotation() {
-    useBennaGithubApiKey = false;
-  };
 
 module.exports = getRepoFiles;
