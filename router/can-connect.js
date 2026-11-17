@@ -20,13 +20,6 @@ const examCountCache = {
 };
 const EXAM_CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
-// Budget check cache
-const budgetCache = {
-  exceeded: null,
-  expiresAt: null,
-};
-const BUDGET_CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
-
 router.get("/", async (req, res) => {
   try {
     // If no database connection is available (e.g., in test environment)
@@ -37,29 +30,6 @@ router.get("/", async (req, res) => {
     }
 
     const now = Date.now();
-
-    // Check budget status first
-    let budgetExceeded = false;
-    if (budgetCache.expiresAt && budgetCache.expiresAt > now) {
-      budgetExceeded = budgetCache.exceeded;
-    } else {
-      try {
-        const budgetResult = await sql`
-          SELECT budget_exceeded FROM budget_status WHERE id = 1
-        `;
-        budgetExceeded =
-          budgetResult.length > 0 && budgetResult[0].budget_exceeded;
-        budgetCache.exceeded = budgetExceeded;
-        budgetCache.expiresAt = now + BUDGET_CACHE_TTL_MS;
-      } catch (budgetError) {
-        console.error("Error checking budget status:", budgetError);
-        // If we can't check budget, allow connection (fail open)
-      }
-    }
-
-    if (budgetExceeded) {
-      return res.json(false);
-    }
 
     // Check if we have cached data that's still valid
     if (examCountCache.expiresAt && examCountCache.expiresAt > now) {
