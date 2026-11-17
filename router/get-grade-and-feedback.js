@@ -93,7 +93,7 @@ console.log(prompt); */
       systemPrompt,
       prompt,
       GradeAndFeedbackSchema,
-      "gemini-2.5-flash-lite"
+      process.env.GEMINI_MODEL || "gemini-3.8-flash"
     );
 
     res.json(cleanGradeAndFeedback(parsed));
