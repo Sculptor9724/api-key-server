@@ -17,6 +17,11 @@ router.post("/", async (req, res) => {
       task_generation_instructions,
     } = req.body;
 
+    console.log(learning_goals);
+    
+
+    
+
     if (!learning_goals) {
       return res
         .status(400)
@@ -36,11 +41,29 @@ router.post("/", async (req, res) => {
     const time_for_feedback = 1;
     const activeExaminationMin = duration - time_for_feedback;
 
+    const titleSection = title
+      ? `
+Exam title:
+"""
+${title}
+"""
+`
+      : "";
+
     const descriptionSection = description
       ? `
 Here is the description for the exam:
 """
 ${description}
+"""
+`
+      : "";
+
+    const learningGoalsSection = learning_goals
+      ? `
+Learning goals being examined:
+"""
+${learning_goals}
 """
 `
       : "";
@@ -75,12 +98,15 @@ ${task_generation_instructions}
     const prompt =
       `Create a new task for an exam for an exam with the following details:
 
+${titleSection}
 ${descriptionSection}
+${learningGoalsSection}
 
 Exam duration in minutes:
 """
 ${duration - 1}
 """
+${typicalQuestionsSection}
 ${examplesSection}
 ${taskGenerationInstructionsSection}
 
@@ -90,6 +116,8 @@ Output the task in Markdown format. Simply write the task and get straight to th
 
   `.trim();
 //console.log(examples);
+console.log(prompt);
+
     const taskStudent = await getGeminiChatCompletion(
       "You are an expert lecturer creating tasks for an exam. Please focus on creating tasks that are engaging, well structured and understandable",
       prompt,
