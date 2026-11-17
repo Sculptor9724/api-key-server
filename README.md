@@ -32,20 +32,20 @@ the development file watcher. Set `PORT` to change the port.
 | Variable | Required for | Description |
 | --- | --- | --- |
 | `GEMINI_API_KEY` | Gemini endpoints | Google Gemini API key |
+| `GEMINI_MODEL` | Optional | Gemini model name; defaults to `gemini-3.8-flash` |
 | `GITHUB_API_KEY` | GitHub repository input | GitHub token used to read repository contents |
 | `SUPABASE_URL` | Authenticated routes and account deletion | Supabase project URL |
 | `SUPABASE_PUBLISHABLE_KEY` | Authenticated routes and account deletion | Supabase publishable key used to validate access tokens |
 | `SUPABASE_SECRET_KEY` | Account deletion | Backend-only Supabase secret key; never expose it to clients |
-| `DATABASE_URL` | `/can-connect` and budget webhook | PostgreSQL connection string |
-| `BUDGET_WEBHOOK_SECRET` | Budget webhook | Shared secret checked on incoming budget notifications |
+| `DATABASE_URL` | `/can-connect` | PostgreSQL connection string |
 | `PORT` | Optional | HTTP port; defaults to `3002` |
 | `NODE_ENV` | Optional | Set to `development` for local work and `production` when deployed |
 | `JSON_BODY_LIMIT` | Optional | Maximum JSON request size; defaults to `10mb` |
 | `FORM_BODY_LIMIT` | Optional | Maximum URL-encoded request size; defaults to `10mb` |
 | `DISABLE_AUTH` | Local development only | Set to `true` to bypass auth outside production; never enable in production |
 
-Some endpoints require database tables named `exam_logs` and `budget_status`.
-The budget webhook updates `budget_status`; `/can-connect` reads both tables.
+Some endpoints require a database table named `exam_logs`.
+`/can-connect` reads it to enforce the daily exam limit.
 
 ## API
 
@@ -106,12 +106,6 @@ fields include `typical_questions`, `description`, `grade_criteria`, and
 `DELETE /api/me` requires a Supabase bearer access token. It deletes the account
 belonging to that token; it does not accept a user ID from the caller. Call it
 only after your client has confirmed the user's intent.
-
-### Budget notifications
-
-`POST /api/budget-webhook?token=<BUDGET_WEBHOOK_SECRET>` accepts a
-Google Pub/Sub-style budget notification. Configure the shared secret and
-database connection before enabling the webhook.
 
 ## Authentication and CORS
 
