@@ -17,13 +17,7 @@ const app = express();
 const JSON_BODY_LIMIT = process.env.JSON_BODY_LIMIT || "10mb"; // base64 images can be large
 const FORM_BODY_LIMIT = process.env.FORM_BODY_LIMIT || "10mb";
 
-const whitelist = [
-  "https://behu-kea.github.io",
-  "https://mineksamen.dk",
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://localhost:3002",
-];
+const whitelist = [];
 
 app.use(
   cors({
