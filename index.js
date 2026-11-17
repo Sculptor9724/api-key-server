@@ -9,7 +9,6 @@ const tokenRouter = require("./router/token");
 const canConnectRouter = require("./router/can-connect");
 const projectDefenseRouter = require("./router/project-defense");
 const deleteMeRouter = require("./router/delete-me");
-const budgetWebhookRouter = require("./router/budget-webhook");
 const authenticate = require("./middleware/auth");
 
 const app = express();
@@ -56,7 +55,6 @@ app.use("/get-examiner-questions", authenticate, getExaminerQuestionsRouter);
 app.use("/get-grade-and-feedback", authenticate, getGradeAndFeedbackRouter);
 app.use("/project-defense", authenticate, projectDefenseRouter);
 app.use("/api/me", deleteMeRouter);
-app.use("/api/budget-webhook", budgetWebhookRouter);
 
 // Central error handler (including payload too large)
 app.use((err, req, res, next) => {
